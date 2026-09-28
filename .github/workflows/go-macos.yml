@@ -1,0 +1,33 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go-Macos
+
+on:
+  workflow_dispatch:
+jobs:
+
+
+
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up Go
+      uses: actions/setup-go@v7
+      with:
+        go-version: '1.27.1'
+
+    - name: Tidy
+      run: go mod tidy
+
+    - name: Build
+      run: go build -o ./bin/subtitles_visualizer_macos -v ./...
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: subtitles_visualizer_macos
+        path: ./bin/subtitles_visualizer_macos
+   
