@@ -19,7 +19,6 @@ const (
 type State struct {
 	textList TextList
 	text string
-	c *chan string
 }
 
 type TextList struct {
@@ -44,14 +43,18 @@ func (l *TextList) ToText() string {
 	return fmt.Sprintf("%s\n%s", l.b[l.f].String(), l.b[l.f^1].String())
 }
 
-func scanner_to_channel(in bufio.Scanner, c *chan string) {
-	for in.Scan() {
-		*c <- in.Text()
-	}
-	if err := in.Err(); err!=nil {
-		fmt.Fprintln(os.Stderr, "Error ", err)
-	}
-	close(*c)
+func scanner_to_channel(in *bufio.Scanner) chan string {
+	c := make(chan string, 20)
+	go func(){
+		for in.Scan() {
+			c <- in.Text()
+		}
+		if err := in.Err(); err!=nil {
+			fmt.Fprintln(os.Stderr, "Error ", err)
+		}
+		close(c)
+	}()
+	return c
 }
 
 func parse(t string, l *TextList, out *bufio.Writer) {
@@ -79,8 +82,7 @@ func main() {
 	in  := bufio.NewScanner(os.Stdin)
 	out := bufio.NewWriter(os.Stdout)
 	textList := new(TextList)
-	c := make(chan string, 20)
-	go scanner_to_channel(*in, &c)
+	c := scanner_to_channel(in)
 	w := gui.NewWindow(gui.WindowCfg{
 		State: state, Title: "Subtitle_Visualizer", Width: 800, Height: 100,
 		BgColor: gui.RGBA(0, 0, 0, 10), Decorations: gui.DecorationNone, Transparent: true,
@@ -91,7 +93,6 @@ func main() {
 		Shortcut: gui.Shortcut{Key: gui.KeyQ, Modifiers: gui.ModNone},
 		Global:   true,
 		Execute: func(_ *gui.Event, w *gui.Window) {
-			//fmt.Println("Hello from EventHandler")
 			os.Stdin.Write([]byte{0})
 			os.Stdin.Close()
 			w.Close()
@@ -142,7 +143,6 @@ func main() {
 		parse(t, textList, out)
 		state.text = textList.ToText()
 	})
-	state.c = &c
 
 	//w.OnEvent = func(e *gui.Event, w *gui.Window) {
 	//switch e.Type {
