@@ -1,0 +1,36 @@
+name: Deployment
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  jobs:
+  
+    build:
+      name: build_${{ matrix.os }}
+      runs-on: ${{ matrix.os }}
+      strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+      steps:
+        - uses: actions/checkout@v7
+
+        - name: Set up Go
+          uses: actions/setup-go@v7
+          with:
+            go-version: '1.27.1'
+
+        - name: Tidy
+          run: go mod tidy
+
+        - name: Build
+          run: go build -o ./bin/subtitles_visualizer_${{ matrix.os }} -v ./...
+
+        - name: Upload artifact
+          uses: actions/upload-artifact@v7
+          if: github.ref_type == 'tag'
+          with:
+            name: subtitles_visualizer_${{ matrix.os }}
+            path: ./bin/subtitles_visualizer_${{ matrix.os }}
