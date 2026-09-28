@@ -1,0 +1,33 @@
+name: Go-Linux
+
+on:
+  pull_request: 
+    branches: main
+  push:
+    branches: main
+  workflow_dispatch:
+jobs:
+
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up Go
+      uses: actions/setup-go@v7
+      with:
+        go-version: '1.27.1'
+
+    - name: Tidy
+      run: go mod tidy
+
+    - name: Build
+      run: go build -o ./bin/go-gui_test -v ./...
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: subtitles_visualizer_linux
+        path: ./bin/subtitles_visualizer_linux
