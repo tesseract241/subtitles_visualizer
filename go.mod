@@ -2,13 +2,13 @@ module subtitles_visualizer
 
 go 1.27.1
 
-require github.com/go-gui-org/go-gui v0.80.0
+require github.com/go-gui-org/go-gui v0.84.0
 
 require (
 	github.com/alecthomas/chroma/v2 v2.27.0 // indirect
 	github.com/dlclark/regexp2/v2 v2.2.2 // indirect
-	github.com/ebitengine/purego v0.10.2 // indirect
-	github.com/go-gui-org/go-glyph v1.26.0 // indirect
+	github.com/ebitengine/purego v0.11.1 // indirect
+	github.com/go-gui-org/go-glyph v1.26.1 // indirect
 	github.com/go-pdf/fpdf v0.9.0 // indirect
 	github.com/go-text/typesetting v0.3.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
