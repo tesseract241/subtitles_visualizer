@@ -43,7 +43,7 @@ func (l *TextList) ToText() string {
 	return fmt.Sprintf("%s\n%s", l.b[l.f].String(), l.b[l.f^1].String())
 }
 
-func scanner_to_channel(in *bufio.Scanner) chan string {
+func _scanner_to_channel(in *bufio.Scanner) chan string {
 	c := make(chan string, 20)
 	go func(){
 		for in.Scan() {
@@ -82,7 +82,7 @@ func main() {
 	in  := bufio.NewScanner(os.Stdin)
 	out := bufio.NewWriter(os.Stdout)
 	textList := new(TextList)
-	c := scanner_to_channel(in)
+	c := _scanner_to_channel(in)
 	w := gui.NewWindow(gui.WindowCfg{
 		State: state, Title: "Subtitle_Visualizer", Width: 800, Height: 100,
 		BgColor: gui.RGBA(0, 0, 0, 10), Decorations: gui.DecorationNone, Transparent: true,
