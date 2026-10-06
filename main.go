@@ -57,9 +57,8 @@ func _scanner_to_channel(in *bufio.Scanner) chan string {
 	return c
 }
 
-func parse(t string, l *TextList, out *bufio.Writer) {
-	fmt.Fprint(out, t)
-	out.Flush()
+func _parse(t string, l *TextList) {
+	fmt.Print(t)
 	index := strings.IndexFunc(t, unicode.IsUpper)
 	if index > 0 {
 		l.Append(t[:index])
@@ -80,7 +79,6 @@ func main() {
 	}
 	gui.SetTheme(t)
 	in  := bufio.NewScanner(os.Stdin)
-	out := bufio.NewWriter(os.Stdout)
 	textList := new(TextList)
 	c := _scanner_to_channel(in)
 	w := gui.NewWindow(gui.WindowCfg{
@@ -140,7 +138,7 @@ func main() {
 	})
 	w.SetView(mainView)
 	gui.Stream(w, c, func(w *gui.Window, t string) {
-		parse(t, textList, out)
+		_parse(t, textList)
 		state.text = textList.ToText()
 	})
 
