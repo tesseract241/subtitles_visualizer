@@ -31,6 +31,9 @@ jobs:
       - name: Build
         run: go build -o ./bin/subtitles_visualizer_${{ matrix.os }} -v ./...
 
+      - name: Test
+        run: go test
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
