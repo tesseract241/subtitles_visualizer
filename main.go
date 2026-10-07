@@ -60,14 +60,19 @@ func _scanner_to_channel(in *bufio.Scanner) chan string {
 	return c
 }
 
+
 func _parse(t string, l *TextList) {
-	fmt.Print(t)
+	if debug {
+		fmt.Print(t)
+	}
 	index := strings.IndexFunc(t, unicode.IsUpper)
 	if index > 0 {
 		l.Append(t[:index])
 	}
 	if index != -1 {
 		l.NewLine(t[index:])
+	} else {
+		l.Append(t)
 	}
 }
 
