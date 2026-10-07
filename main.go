@@ -40,7 +40,10 @@ func (l *TextList) NewLine(s string) {
 }
 
 func (l *TextList) ToText() string {
-	return fmt.Sprintf("%s\n%s", l.b[l.f].String(), l.b[l.f^1].String())
+	if l.c != l.f {
+		return fmt.Sprintf("%s\n%s", l.b[l.f].String(), l.b[l.f^1].String())
+	}
+	return l.b[l.f].String()
 }
 
 func _scanner_to_channel(in *bufio.Scanner) chan string {
